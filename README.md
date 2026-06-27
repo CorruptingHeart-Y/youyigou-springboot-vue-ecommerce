@@ -1,4 +1,4 @@
-# 🛒 有一购 (YouYiGou) — 全栈微服务电商平台
+# 🛒 优易购 (YouYiGou) — 全栈微服务电商平台
 
 <p align="center">
   <img src="https://img.shields.io/badge/Spring%20Boot-3.3.6-brightgreen?logo=springboot" alt="Spring Boot">
@@ -32,7 +32,7 @@
 
 ## 📖 项目简介
 
-**有一购 (YouYiGou)** 是一个基于 Spring Boot 3 + Vue 3 的全栈电商平台，采用微服务架构将系统拆分为用户服务、商品服务、订单服务和 API 网关四个独立模块。前端使用 Vue 3 + Element Plus 构建响应式界面，后端集成 Spring Security + JWT 实现细粒度权限控制。
+**优易购 (YouYiGou)** 是一个基于 Spring Boot 3 + Vue 3 的全栈电商平台，采用微服务架构将系统拆分为用户服务、商品服务、订单服务和 API 网关四个独立模块。前端使用 Vue 3 + Element Plus 构建响应式界面，后端集成 Spring Security + JWT 实现细粒度权限控制。
 
 本项目为大学《Web 开发技术》课程设计，完整覆盖客户端购物全流程和管理后台全维度管理，并在基础需求之上实现了 Redis 缓存优化、微服务拆分、Docker 容器化等拓展功能。
 
