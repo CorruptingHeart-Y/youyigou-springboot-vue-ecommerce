@@ -1,0 +1,22 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: api-gateway
+  servlet:
+    multipart:
+      enabled: false
+  web:
+    resources:
+      static-locations: file:frontend/dist/
+      add-mappings: true
+services:
+  user: http://localhost:8081
+  product: http://localhost:8082
+  order: http://localhost:8083
+frontend:
+  dist: frontend/dist
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn

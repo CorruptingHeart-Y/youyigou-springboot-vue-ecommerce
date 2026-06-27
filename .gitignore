@@ -1,0 +1,99 @@
+# ===========================================
+# Java / Maven
+# ===========================================
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.iml
+.idea/
+
+# Maven wrapper (keep mvnw if used, otherwise ignore)
+!.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
+
+# ===========================================
+# Node.js / Frontend
+# ===========================================
+node_modules/
+dist/
+frontend/dist/
+*.local
+
+# Vite cache
+.vite/
+
+# ===========================================
+# IDE / Editor
+# ===========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ===========================================
+# Logs
+# ===========================================
+logs/
+*.log
+
+# ===========================================
+# Runtime / Database / Cache
+# ===========================================
+dump.rdb
+temp-*.rdb
+*.db
+
+# ===========================================
+# Uploaded files (keep directory structure)
+# ===========================================
+uploads/
+!uploads/.gitkeep
+
+# ===========================================
+# OS generated files
+# ===========================================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ===========================================
+# Environment / Secrets
+# ===========================================
+.env
+.env.local
+.env.*.local
+
+# ===========================================
+# Project-specific
+# ===========================================
+*.zip
+*.tar.gz
+ecommerce-final.zip
+
+# Generated passwords / temp
+GenPwd.class
+GenPwd.java
+query
+temp-*.rdb
+dump.rdb
+
+# OpenCode / Claude local config (keep CLAUDE.md)
+.opencode/
+.claude/
+opencode.json
+
+# ===========================================
+# Keep these files
+# ===========================================
+!sql/
+!README.md
+!CLAUDE.md
+!docker-compose.yml
+!pom.xml
+!settings.xml

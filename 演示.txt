@@ -1,0 +1,9 @@
+docker：
+# 1. 一键启动（在项目根目录）
+docker-compose up -d
+
+# 2. 展示所有容器运行状态（截图用图片13）
+docker ps
+
+# 3. 展示容器日志（可选，证明服务正常）
+docker-compose logs --tail=20 gateway

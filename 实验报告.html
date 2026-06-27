@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《Web开发技术》实验报告 — 电商平台</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Microsoft YaHei", "SimSun", sans-serif; font-size: 14px; color: #333; background: #f0f0f0; line-height: 1.8; }
+  .paper { max-width: 900px; margin: 30px auto; background: #fff; padding: 50px 60px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+  h1 { text-align: center; font-size: 22px; margin-bottom: 30px; }
+  h2 { font-size: 16px; margin: 30px 0 12px 0; padding-bottom: 6px; border-bottom: 2px solid #409eff; }
+  h3 { font-size: 14px; margin: 18px 0 8px 0; color: #409eff; }
+  p { text-indent: 2em; margin-bottom: 8px; }
+  p.no-indent { text-indent: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+  table th, table td { border: 1px solid #ddd; padding: 8px 10px; text-align: center; font-size: 13px; }
+  table th { background: #409eff; color: #fff; font-weight: bold; }
+  table td { text-align: left; }
+  table td.center { text-align: center; }
+  ul, ol { margin: 8px 0 8px 3em; }
+  li { margin-bottom: 4px; }
+  .info-table td:first-child { width: 120px; font-weight: bold; text-align: center; background: #f5f7fa; }
+  .screenshot { margin: 15px 0; text-align: center; }
+  .screenshot img { max-width: 100%; border: 1px solid #ddd; border-radius: 4px; }
+  .screenshot .caption { font-size: 12px; color: #909399; margin-top: 5px; }
+  .screenshot-box { border: 2px dashed #bbb; border-radius: 8px; padding: 40px 20px; background: #fafafa; color: #909399; font-size: 13px; display: inline-block; min-width: 70%; }
+  .screenshot-box .icon { font-size: 36px; display: block; margin-bottom: 10px; }
+  .screenshot-box .title { font-weight: bold; color: #606266; font-size: 15px; margin-bottom: 6px; }
+  .screenshot-box .desc { font-size: 12px; }
+  .score-table td:first-child { text-align: center; font-weight: bold; width: 80px; }
+  .score-table td:nth-child(2) { width: 400px; }
+  .score-table td:nth-child(3), .score-table td:nth-child(4) { text-align: center; width: 60px; }
+  .total-row td { font-weight: bold; background: #fef0f0; }
+  .code { background: #f5f7fa; padding: 2px 6px; border-radius: 3px; font-family: Consolas, monospace; font-size: 13px; }
+  .arch-diagram { background: #f5f7fa; padding: 15px 20px; border-radius: 6px; font-family: Consolas, monospace; font-size: 12px; white-space: pre; line-height: 1.6; margin: 10px 0; overflow-x: auto; }
+  @media print {
+    body { background: #fff; }
+    .paper { box-shadow: none; margin: 0; padding: 20px 30px; }
+    h2 { page-break-after: avoid; }
+    .screenshot { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="paper">
+
+<!-- ========== 封面 ========== -->
+<h1>《Web开发技术》实验（大作业）报告</h1>
+
+<table class="info-table" style="margin-bottom:30px;">
+  <tr><td>实验项目</td><td>基于Web的《电商平台》开发</td></tr>
+  <tr><td>专业班级</td><td>____________________</td></tr>
+  <tr><td>学　　号</td><td>____________________</td></tr>
+  <tr><td>姓　　名</td><td>____________________</td></tr>
+  <tr><td>实验日期</td><td>2026年____月____日</td></tr>
+</table>
+
+<hr style="border:none;border-top:1px dashed #ddd;margin:20px 0;">
+
+<!-- ========== 一、实验目的 ========== -->
+<h2>一、实验目的</h2>
+<p>通过本次实验，熟练运用 Java 语言、Web前端技术（HTML、JavaScript、CSS）、Web后端技术（Servlet、JSP、Listener、Filter、JDBC等）、MySQL数据库以及框架技术（Spring、Vue3、MyBatis），开发一套基本完善的基于Web的《电商平台》业务系统。</p>
+<p>掌握Web开发的基本原理、开发方法及开发流程，掌握运用Web基本技术解决实际问题的开发能力。具体包括：</p>
+<ol>
+  <li>掌握前后端分离开发模式，使用 Vue3 + Element Plus 构建用户界面，Spring Boot 构建 RESTful API 后端服务。</li>
+  <li>掌握微服务架构设计思想，将系统拆分为用户服务、商品服务、订单服务等独立模块，并通过 API 网关统一入口。</li>
+  <li>掌握 Redis 缓存技术在热点数据访问优化中的应用。</li>
+  <li>掌握 Docker 容器化部署技术，实现开发、测试与生产环境的一致性。</li>
+  <li>掌握 Shiro + Spring Security + JWT 双重认证鉴权机制。</li>
+  <li>掌握 WebSocket 实时通信技术在在线客服场景中的应用。</li>
+</ol>
+
+<!-- ========== 二、实验内容 ========== -->
+<h2>二、实验内容</h2>
+
+<h3>2.1 基本内容——客户端功能</h3>
+<p class="no-indent"><strong>（1）商品模块：</strong>实现商品分类浏览、商品详情展示（图片、名称、价格、库存、规格参数、详情介绍）、商品搜索（关键词模糊搜索、按价格/销量/新品排序）、商品收藏/取消收藏及收藏列表、商品评价（查看评价、提交评价、上传评价图片）。</p>
+<p class="no-indent"><strong>（2）购物车模块：</strong>实现添加商品到购物车（支持选择规格和数量）、购物车列表展示（商品图片、名称、单价、数量、小计）、购物车操作（修改数量、删除商品、勾选商品、全选/反选）、结算跳转订单确认页。</p>
+<p class="no-indent"><strong>（3）订单模块：</strong>实现订单确认（选择收货地址、商品清单、总价计算、优惠券折扣）、订单提交（生成订单号、选择支付方式）、订单支付（模拟支付）、我的订单（按全部/待支付/待发货/待收货/已完成/已取消分状态查看）、订单操作（取消订单、确认收货、申请退款、查询物流）。</p>
+
+<h3>2.2 基本内容——管理后台功能</h3>
+<p class="no-indent"><strong>（1）管理员认证：</strong>管理员登录与退出，基于 JWT 的无状态认证。</p>
+<p class="no-indent"><strong>（2）首页数据看板：</strong>核心数据统计（总用户数、总订单数、总销售额、今日订单/销售额），ECharts 图表（销量趋势折线图、订单状态饼图、热销商品排行）。</p>
+<p class="no-indent"><strong>（3）用户管理：</strong>用户列表查看、按账号/手机号/昵称搜索、禁用/启用用户、修改用户角色。</p>
+<p class="no-indent"><strong>（4）商品管理：</strong>商品分类管理（新增/修改/删除/排序）、商品列表（查看、搜索、筛选）、商品新增（上传图片、填写名称、价格、库存、分类、详情）、商品编辑（修改信息、上下架、调整库存价格）、商品删除、批量导入Excel、导出Excel。</p>
+<p class="no-indent"><strong>（5）订单管理：</strong>订单列表（按订单号/状态筛选）、订单详情查看、发货/取消/退款处理、订单导出Excel。</p>
+
+<h3>2.3 进阶内容</h3>
+<ol>
+  <li><strong>技术进阶：</strong>运用 Vue3 + Element Plus + Pinia 构建前端；Spring Boot 3.3 + MyBatis-Plus 构建后端；Shiro + Spring Security + JWT 实现双重认证鉴权。</li>
+  <li><strong>用户认证模块：</strong>邮箱注册（验证码）、账号登录（记住密码）、找回密码（邮箱验证码重置）、个人信息修改。</li>
+  <li><strong>首页模块：</strong>轮播广告图、分类导航栏、促销活动展示、热门商品/新品推荐、系统公告展示、搜索框。</li>
+  <li><strong>收货地址模块：</strong>新增/修改/删除/设为默认地址。</li>
+  <li><strong>商品规格选择：</strong>颜色、尺寸等规格选择功能。</li>
+  <li><strong>促销活动：</strong>秒杀、折扣、优惠券的创建与管理，下单时优惠券折扣自动计算。</li>
+  <li><strong>在线客服：</strong>基于 WebSocket 的实时在线聊天。</li>
+  <li><strong>轮播/广告管理：</strong>轮播图 CRUD、图片上传。</li>
+  <li><strong>系统管理：</strong>公告管理、反馈管理（回复/标记已处理）、管理员个人中心（修改密码）。</li>
+  <li><strong>响应式布局：</strong>适配手机/平板/电脑三档断点（480px/768px/992px）。</li>
+  <li><strong>数据分页：</strong>所有列表接口均实现分页查询。</li>
+</ol>
+
+<h3>2.4 拓展内容</h3>
+<ol>
+  <li><strong>Redis 缓存优化：</strong>引入 Redis 缓存商品详情、用户 Token 会话、验证码等热点数据，设置合理过期时间，有效提升页面加载响应速度。</li>
+  <li><strong>微服务架构拆分：</strong>将系统拆分为 ecommerce-user（用户服务）、ecommerce-product（商品服务）、ecommerce-order（订单服务）、ecommerce-gateway（API网关）、ecommerce-common（公共模块）五个独立模块，各模块独立部署，通过 API 网关实现统一入口和服务间 RestTemplate 通信。</li>
+  <li><strong>Docker 容器化部署：</strong>基于 Docker + docker-compose 封装项目运行环境，将 MySQL、Redis、user-service、product-service、order-service、gateway-service 六个容器统一编排部署，实现多环境部署一致性。</li>
+</ol>
+
+<!-- ========== 三、实验环境 ========== -->
+<h2>三、实验环境</h2>
+<table>
+  <tr><th style="width:140px;">类别</th><th>工具/技术</th><th style="width:180px;">版本</th></tr>
+  <tr><td class="center">操作系统</td><td>Windows 11</td><td class="center">—</td></tr>
+  <tr><td class="center">开发工具</td><td>VS Code / IntelliJ IDEA</td><td class="center">Latest</td></tr>
+  <tr><td class="center">JDK</td><td>Eclipse Temurin</td><td class="center">23</td></tr>
+  <tr><td class="center">后端框架</td><td>Spring Boot</td><td class="center">3.3.6</td></tr>
+  <tr><td class="center">ORM 框架</td><td>MyBatis-Plus</td><td class="center">3.5.9</td></tr>
+  <tr><td class="center">前端框架</td><td>Vue 3 + Element Plus + Pinia</td><td class="center">3.4 / 2.7 / 2.1</td></tr>
+  <tr><td class="center">构建工具</td><td>Maven / Vite</td><td class="center">— / 5.4</td></tr>
+  <tr><td class="center">数据库</td><td>MySQL</td><td class="center">8.0</td></tr>
+  <tr><td class="center">缓存</td><td>Redis</td><td class="center">7.x Alpine</td></tr>
+  <tr><td class="center">安全框架</td><td>Spring Security + Apache Shiro + JWT</td><td class="center">— / 2.0.1 / 0.12.6</td></tr>
+  <tr><td class="center">图表</td><td>ECharts + vue-echarts</td><td class="center">5.5 / 6.7</td></tr>
+  <tr><td class="center">容器化</td><td>Docker + Docker Compose</td><td class="center">Latest</td></tr>
+  <tr><td class="center">接口文档</td><td>Knife4j (Swagger)</td><td class="center">4.5.0</td></tr>
+  <tr><td class="center">工具库</td><td>Apache POI, Hutool, Lombok</td><td class="center">5.3.0 / 5.8.34 / 1.18.36</td></tr>
+</table>
+
+<!-- ========== 四、实验过程与分析 ========== -->
+<h2>四、实验过程与分析</h2>
+
+<h3>4.1 系统架构设计</h3>
+<p>本系统采用前后端分离 + 微服务架构。前端使用 Vue3 + Element Plus 构建 SPA 单页应用，通过 Axios 与后端 API 通信。后端拆分为四个独立微服务，通过 API 网关统一路由。各服务共享 ecommerce-common 公共模块（实体类、DTO、Mapper、安全组件），数据库层面共享同一 MySQL 实例的不同业务表。</p>
+
+<p><strong>微服务架构图：</strong></p>
+<div class="arch-diagram">┌─────────────────────────────────────────────┐
+│       前端 (Vue3 + Element Plus + Pinia)       │
+│              localhost:3000                    │
+└─────────────────┬───────────────────────────┘
+                  │ /api/** (Axios)
+┌─────────────────▼───────────────────────────┐
+│       API Gateway (Spring Boot :8080)         │
+│   根据路径前缀智能路由到对应微服务              │
+└──┬──────────────┬──────────────┬────────────┘
+   │              │              │
+   ▼              ▼              ▼
+┌──────┐    ┌──────────┐   ┌──────────┐
+│ User │    │ Product  │   │  Order   │
+│:8081 │    │  :8082   │   │  :8083   │
+├──────┤    ├──────────┤   ├──────────┤
+│认证  │    │商品/分类  │   │订单/购物车│
+│用户  │    │轮播/公告  │   │仪表盘    │
+│地址  │    │评价/收藏  │   │反馈/物流 │
+│      │    │促销/WS   │   │内容管理  │
+└──────┘    └──────────┘   └──────────┘
+         ┌────────────────────┐
+         │  ecommerce-common  │
+         │ (实体/DTO/Mapper/  │
+         │  安全/WebSocket)   │
+         └────────────────────┘
+
+     ┌──────────┐    ┌──────────┐
+     │  MySQL 8 │    │ Redis 7  │
+     │  :3306   │    │  :6379   │
+     └──────────┘    └──────────┘</div>
+
+<h3>4.2 数据库设计</h3>
+<p>系统共设计 11 张核心业务表：用户表（e_user）、商品分类表（e_category）、商品表（e_product，含 FULLTEXT 全文索引）、购物车表（e_cart_item）、收货地址表（e_address）、订单表（e_order）、订单明细表（e_order_item）、商品评价表（e_review）、用户收藏表（e_user_favorite）、轮播图表（e_banner）、公告表（e_announcement）、用户反馈表（e_feedback）、促销活动表（e_promotion）。所有表均采用逻辑删除（deleted 字段）和 MyBatis-Plus 自动填充（create_time/update_time）。</p>
+
+<div class="screenshot">
+  <div class="screenshot-box">
+    <span class="icon">🗄️</span>
+    <div class="title">图1：数据库表结构概览</div>
+    <div class="desc">� 打开 Navicat / DataGrip，展开 ecommerce 数据库，截取全部 13 张表的树形列表</div>
+  </div>
+  <div class="caption">图1：数据库表结构概览</div>
+</div>
+
+<h3>4.3 客户端前端实现</h3>
+
+<h4>4.3.1 首页（Home.vue）</h4>
+<p>首页包含轮播广告图（el-carousel）、分类导航栏（el-button 平铺）、促销活动展示（el-card 四列网格）、热门商品/新品推荐（el-row + el-col 商品卡片）、系统公告（el-alert）。所有数据通过 <span class="code">onMounted</span> 生命周期并行请求多个 API 接口获取。</p>
+
+<div class="screenshot">
+  <div class="screenshot-box">
+    <span class="icon">🏠</span>
+    <div class="title">图2：客户端首页</div>
+    <div class="desc">� 运行前端后打开浏览器，截取首页完整画面（含轮播图、分类导航、促销、热门、新品、公告）</div>
+  </div>
+  <div class="caption">图2：客户端首页</div>
+</div>
+
+<h4>4.3.2 商品详情与规格选择</h4>
+<p>商品详情页展示商品大图、多图切换、名称、价格（含原价划线）、库存、销量、分类。支持规格选择下拉框（当商品有 specs 数据时动态渲染），数量输入框，加入购物车、立即购买、收藏/取消收藏操作。详情标签页展示 HTML 富文本，评价标签页展示用户评价（含图片）并支持登录用户发表带图片的评价。</p>
+
+<div class="screenshot">
+  <div class="screenshot-box">
+    <span class="icon">🛍️</span>
+    <div class="title">图3：商品详情页</div>
+    <div class="desc">� 打开任意商品详情页，截取含规格下拉框、价格区、评价图片的完整页面</div>
+  </div>
+  <div class="caption">图3：商品详情页（含规格选择与评价图片）</div>
+</div>
+
+<h4>4.3.3 购物车与结算</h4>
+<p>购物车使用 Pinia <span class="code">useCartStore</span> 管理状态。列表展示商品图片、名称、规格、单价、数量（可修改）、小计、勾选框。支持全选/反选、单个删除。结算时弹出对话框：选择收货地址、支付方式（支付宝/微信/余额）、选择优惠券（自动计算折扣后应付金额）、填写备注。</p>
+
+<div class="screenshot">
+  <div class="screenshot-box">
+    <span class="icon">🛒</span>
+    <div class="title">图4：购物车与结算</div>
+    <div class="desc">� 截取购物车列表页 + 结算弹窗（含优惠券选择和折扣金额显示）</div>
+  </div>
+  <div class="caption">图4：购物车与结算（含优惠券折扣）</div>
+</div>
+
+<h4>4.3.4 订单与物流</h4>
+<p>我的订单页支持按状态筛选（全部/待支付/待发货/待收货/已完成/已取消），列表展示订单号、金额、状态。订单详情展示商品清单、地址、支付信息。支持取消订单、确认收货、申请退款、查看物流。</p>
+
+<div class="screenshot">
+  <div class="screenshot-box">
+    <span class="icon">📦</span>
+    <div class="title">图5：我的订单列表</div>
+    <div class="desc">� 截取"我的订单"页面，展示多状态 Tab（全部/待支付/待发货/待收货/已完成/已取消）及订单列表</div>
+  </div>
+  <div class="caption">图5：我的订单列表</div>
+</div>
+
+<div class="screenshot">
+  <div class="screenshot-box">
+    <span class="icon">🚚</span>
+    <div class="title">图6：物流查询</div>
+    <div class="desc">� 截取物流查询页面，展示物流轨迹时间线（已揽收→运输中→到达中转站→派送中→已签收）</div>
+  </div>
+  <div class="caption">图6：物流查询</div>
+</div>
+
+<h4>4.3.5 用户认证</h4>
+<p>实现登录（记住密码 7 天 Token）、注册（邮箱验证码）、找回密码（邮箱验证码重置）、个人信息修改（昵称/邮箱/手机）、修改密码功能。登录后 Token 存 localStorage，Axios 拦截器自动携带 Authorization 请求头。</p>
+
+<div class="screenshot">
+  <div class="screenshot-box">
+    <span class="icon">🔐</span>
+    <div class="title">图7：用户认证</div>
+    <div class="desc">� 拼图：登录页（含记住密码勾选）+ 注册页（含验证码按钮）+ 找回密码页</div>
+  </div>
+  <div class="caption">图7：用户注册/登录/找回密码</div>
+</div>
+
+<h4>4.3.6 在线客服</h4>
+<p>基于 WebSocket 实现实时在线聊天。客户端连接 <span class="code">ws://host:8082/ws/chat/{token}</span>，支持系统广播消息（上线/离线提示）和用户间聊天。消息实时推送，自动滚动到底部。</p>
+
+<div class="screenshot">
+  <div class="screenshot-box">
+    <span class="icon">💬</span>
+    <div class="title">图8：WebSocket 在线客服</div>
+    <div class="desc">� 截取客服聊天页面，展示多条实时对话消息（含不同用户、系统提示）</div>
+  </div>
+  <div class="caption">图8：WebSocket 在线客服聊天</div>
+</div>
+
+<h3>4.4 管理后台实现</h3>
+
+<h4>4.4.1 数据看板</h4>
+<p>仪表盘展示总用户数、总订单数、总销售额、今日订单数四个统计卡片。下方左侧 ECharts 饼图展示订单状态分布，右侧表格展示热销商品排行（商品名、销量、销售额）。底部 ECharts 折线图展示近14天销售趋势。</p>
+
+<div class="screenshot">
+  <div class="screenshot-box">
+    <span class="icon">📊</span>
+    <div class="title">图9：管理后台数据看板</div>
+    <div class="desc">👉 截取 /admin 首页，展示四个统计卡片 + ECharts 饼图 + 热销排行表 + 折线图</div>
+  </div>
+  <div class="caption">图9：管理后台数据看板</div>
+</div>
+
+<h4>4.4.2 商品管理</h4>
+<p>支持商品列表（分页、搜索、分类筛选）、新增/编辑商品（封面图、名称、价格、库存、分类、详情）、上下架、删除。支持批量导入 Excel 和导出 Excel。分类管理支持树形结构的新增、修改、删除。</p>
+
+<div class="screenshot">
+  <div class="screenshot-box">
+    <span class="icon">📋</span>
+    <div class="title">图10：后台商品管理</div>
+    <div class="desc">👉 截取 /admin/products 页面，展示商品列表 + 新增/编辑商品对话框</div>
+  </div>
+  <div class="caption">图10：后台商品管理</div>
+</div>
+
+<h4>4.4.3 订单管理</h4>
+<p>订单列表支持按订单号和状态筛选。管理员可查看订单详情、发货（填写物流单号和公司）、取消订单、处理退款（批准/拒绝）。支持导出订单数据为 Excel。</p>
+
+<div class="screenshot">
+  <div class="screenshot-box">
+    <span class="icon">📨</span>
+    <div class="title">图11：后台订单管理</div>
+    <div class="desc">👉 截取 /admin/orders 页面，展示订单列表 + 发货对话框（物流单号+公司）</div>
+  </div>
+  <div class="caption">图11：后台订单管理</div>
+</div>
+
+<h4>4.4.4 用户管理与角色分配</h4>
+<p>用户列表支持按用户名/手机号/昵称搜索。管理员可禁用/启用用户，可修改用户角色（USER / ADMIN / SUPER_ADMIN），普通管理员不能修改超级管理员角色。页面底部展示权限说明。</p>
+
+<div class="screenshot">
+  <div class="screenshot-box">
+    <span class="icon">👥</span>
+    <div class="title">图12：后台用户管理与角色分配</div>
+    <div class="desc">👉 截取 /admin/users 页面，展示用户列表 + 角色下拉选择 + 权限说明表格</div>
+  </div>
+  <div class="caption">图12：后台用户管理与角色分配</div>
+</div>
+
+<h4>4.4.5 轮播图/公告/促销管理</h4>
+<p>轮播图支持新增/编辑/删除，上传图片和设置跳转链接。公告管理支持发布/编辑/删除。促销管理支持秒杀、折扣、优惠券三种类型，设置优惠值、时间范围和启用状态。</p>
+
+<div class="screenshot">
+  <div class="screenshot-box">
+    <span class="icon">🎨</span>
+    <div class="title">图13：轮播图与促销管理</div>
+    <div class="desc">� 拼图：轮播图管理页 + 促销管理页（秒杀/折扣/优惠券）</div>
+  </div>
+  <div class="caption">图13：轮播图与促销管理</div>
+</div>
+
+<div class="screenshot">
+  <div class="screenshot-box">
+    <span class="icon">📝</span>
+    <div class="title">图14：反馈管理与评价管理</div>
+    <div class="desc">� 拼图：反馈管理页（含回复操作）+ 评价管理页（含删除操作）</div>
+  </div>
+  <div class="caption">图14：反馈管理与评价管理</div>
+</div>
+
+<h3>4.5 后端关键实现</h3>
+
+<h4>4.5.1 JWT + Shiro 双重认证</h4>
+<p>Spring Security 作为主安全框架，通过 <span class="code">JwtAuthenticationFilter</span> 从请求头 <span class="code">Authorization: Bearer {token}</span> 中解析 JWT，提取 userId 存入 <span class="code">SecurityContextHolder</span>。Shiro 配置 <span class="code">EcommerceRealm</span> 实现细粒度权限控制：SUPER_ADMIN 拥有全部权限（<span class="code">*</span>），ADMIN 拥有 admin 模块权限，USER 拥有用户权限。</p>
+
+<h4>4.5.2 API 网关路由</h4>
+<p><span class="code">GatewayController</span> 拦截所有 <span class="code">/api/**</span> 请求，根据路径前缀判断目标服务：<span class="code">/api/auth/</span> → user-service，<span class="code">/api/client/product/</span> → product-service，<span class="code">/api/client/order/</span> → order-service 等。通过 RestTemplate 转发请求，复制原始请求头和请求体，返回响应。</p>
+
+<h4>4.5.3 Redis 缓存策略</h4>
+<ul>
+  <li><strong>商品详情缓存：</strong>使用 <span class="code">product:detail:{productId}</span> 作为 Key，缓存 30 分钟。商品更新时主动清除缓存。</li>
+  <li><strong>Token 会话缓存：</strong>使用 <span class="code">user:token:{userId}</span> 存储 Token，普通登录 1 天过期，记住密码 7 天过期。</li>
+  <li><strong>验证码缓存：</strong>使用 <span class="code">verify:code:{email}</span> 存储 6 位数字验证码，5 分钟过期，验证后立即删除。</li>
+</ul>
+
+<h4>4.5.4 Docker 多服务编排</h4>
+<p><span class="code">docker-compose.yml</span> 定义 6 个服务容器：mysql（健康检查）、redis、user-service、product-service、order-service、gateway-service。各服务通过自定义 <span class="code">ecommerce-net</span> bridge 网络通信，gateway 依赖三个业务服务，业务服务依赖 mysql 和 redis 健康检查通过。Dockerfile 通过 <span class="code">ARG JAR_FILE</span> 支持多服务共用构建。</p>
+
+<div class="screenshot">
+  <div class="screenshot-box">
+    <span class="icon">🐳</span>
+    <div class="title">图15：Docker Compose 多服务部署</div>
+    <div class="desc">� 截取终端 docker-compose up 运行结果，展示 6 个容器全部启动成功</div>
+  </div>
+  <div class="caption">图15：Docker Compose 多服务容器运行</div>
+</div>
+
+<h4>4.5.5 响应式布局</h4>
+<p>编写 <span class="code">responsive.css</span> 适配三档屏幕断点：≤992px（平板，商品卡片 2 列）、≤768px（手机横屏，登录卡片宽度自适应）、≤480px（手机竖屏，全宽单列、管理后台侧边栏隐藏）。</p>
+
+<div class="screenshot">
+  <div class="screenshot-box">
+    <span class="icon">📱</span>
+    <div class="title">图16：移动端响应式布局</div>
+    <div class="desc">👉 用 Chrome DevTools 切换到手机模式（375px），截取首页或商品列表页的响应式效果</div>
+  </div>
+  <div class="caption">图16：移动端响应式布局</div>
+</div>
+
+<!-- ========== 五、实验创新点 ========== -->
+<h2>五、实验创新点</h2>
+
+<h3>5.1 微服务架构与 API 网关</h3>
+<p>将传统单体应用拆分为用户、商品、订单三个独立微服务，通过自定义 API 网关实现统一入口和智能路由。各服务独立部署、独立扩展，服务间通过 RestTemplate 进行同步 HTTP 通信。公共模块（ecommerce-common）统一管理实体类、DTO、Mapper、安全组件、WebSocket 等共享代码，避免重复开发。</p>
+
+<h3>5.2 Redis 多场景缓存优化</h3>
+<p>不局限于简单的 KV 缓存，而是针对不同业务场景设计差异化缓存策略：商品详情采用读多写少场景的 30 分钟热缓存 + 主动失效；Token 会话根据"记住密码"选项动态调整过期时间（1 天 / 7 天）；验证码采用 5 分钟短过期 + 一次性消费模式，保障安全性。</p>
+
+<h3>5.3 Shiro + Spring Security 双重认证鉴权</h3>
+<p>创新性地结合 Spring Security（负责 HTTP 层面的 JWT 过滤器链）和 Apache Shiro（负责方法级权限注解和角色权限字符串匹配），实现 HTTP 层 + 业务层的双层安全防护。Shiro Realm 根据用户角色动态分配权限字符串，SUPER_ADMIN 拥有通配符权限。</p>
+
+<h3>5.4 Docker 全容器化多服务编排</h3>
+<p>通过单一 Dockerfile + ARG 参数实现多服务复用构建，docker-compose 统一编排 6 个容器（MySQL、Redis、3 个微服务、Gateway），使用自定义 bridge 网络实现服务间通信，配置健康检查依赖链确保启动顺序正确。</p>
+
+<h3>5.5 下单流程中的优惠券实时折扣计算</h3>
+<p>优惠券折扣在订单创建时实时计算：前端选择优惠券后展示预估折扣，后端创建订单时验证优惠券有效性（存在且启用），折扣金额不超过商品总额，最终实付金额 = 总额 - 折扣。订单记录中保存 totalAmount、discountAmount、payAmount 三个金额字段，便于财务核算。</p>
+
+<h3>5.6 完整的前后端工程化实践</h3>
+<p>前端：Vite 开发服务器 + 代理配置、Pinia 状态管理、Vue Router 路由守卫（鉴权 + 角色校验）、Axios 拦截器（统一 Token 注入 + 错误处理）、ECharts 数据可视化、Element Plus 中文国际化。后端：Spring Boot 多 profile（dev/docker）、Knife4j 自动 API 文档、MyBatis-Plus 逻辑删除 + 自动填充、全局异常处理器、CORS 跨域配置。</p>
+
+<!-- ========== 六、实验总结 ========== -->
+<h2>六、实验总结</h2>
+<p>通过本次《Web开发技术》大作业，我完整地经历了一个 Web 电商平台从需求分析、系统设计、编码实现到容器化部署的全流程开发实践。</p>
+
+<p><strong>主要收获：</strong></p>
+<ol>
+  <li>深入理解了前后端分离的开发模式，掌握了 Vue3 组合式 API、Element Plus 组件库、Pinia 状态管理等现代前端技术栈。</li>
+  <li>掌握了 Spring Boot 3 的微服务拆分方法，理解了 API 网关在微服务架构中的核心作用——统一入口、路由分发、请求转发。</li>
+  <li>学会了 Redis 在真实业务场景中的应用，包括缓存策略设计、过期时间管理、主动失效机制等。</li>
+  <li>实践了 Docker 容器化技术，理解了 Dockerfile 多阶段构建参数化、docker-compose 多服务编排、网络配置和健康检查等概念。</li>
+  <li>掌握了 Shiro + Spring Security + JWT 的双重认证鉴权架构，理解了认证（你是谁）和鉴权（你能做什么）的区别与协作。</li>
+  <li>学会了 WebSocket 实时通信协议的应用，实现了简单的在线客服功能。</li>
+</ol>
+
+<p><strong>遇到的问题与解决：</strong></p>
+<ol>
+  <li><strong>微服务跨模块引用问题：</strong>拆分后 Controller 引用了旧 Service 接口导致编译失败。解决方案是将各 Controller 改为直接注入 Mapper 操作数据库，或调用同服务内的 Service。</li>
+  <li><strong>Gateway 路由冲突：</strong>多个前缀匹配同一路径。解决方案是优化路由规则，确保每个路径前缀唯一映射到一个目标服务。</li>
+  <li><strong>WebSocket 跨服务问题：</strong>微服务下 WebSocket 无法通过 HTTP 网关代理。解决方案是前端直连 product-service 的 WebSocket 端口。</li>
+</ol>
+
+<p><strong>不足与改进方向：</strong>目前服务间通信采用同步 RestTemplate，高并发场景下可考虑引入消息队列（如 RabbitMQ）实现异步解耦；可进一步引入 Nacos 实现服务注册与发现，替代硬编码的服务地址配置。</p>
+
+<p>本次实验让我对 Web 开发有了更全面、更深入的认识，从最初只会写简单的 CRUD 接口，到现在能够设计并实现一个架构合理、功能完善的微服务电商系统，这离不开课程中所学知识的积累和实践中的不断探索。</p>
+
+<!-- ========== 附录 ========== -->
+<h2>附录：《Web开发技术》实验成绩评定表</h2>
+
+<table class="score-table">
+  <tr>
+    <th>考察点</th>
+    <th>具 体 要 求</th>
+    <th>满分</th>
+    <th>得分</th>
+  </tr>
+  <tr>
+    <td>基本内容</td>
+    <td>能够按照实验项目要求，熟练使用课程中教授技术，完成系统设计和开发。态度认真，设计合理、代码符合编码规范。</td>
+    <td>20</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>分析</td>
+    <td>经过分析，除了基本内容以外，设计并实现额外功能，使系统功能更加完善。</td>
+    <td>20</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>创新</td>
+    <td>系统设计时需考虑系统的延展性、兼容性、可用性、通用性、健壮性、跨平台及持续集成，不仅能满足现有需要，也要适应未来发展的能力。</td>
+    <td>10</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>报告质量</td>
+    <td>报告内容充实、实验内容记录完整，实验结果分析准确，归纳总结充分，实验报告格式正确，文档提交完整、正确。</td>
+    <td>10</td>
+    <td></td>
+  </tr>
+  <tr class="total-row">
+    <td colspan="2">总计</td>
+    <td>60</td>
+    <td></td>
+  </tr>
+</table>
+
+<p style="text-align:right;margin-top:20px;">评定人（签名）：________________</p>
+<p style="text-align:right;">日　　　　期：________________</p>
+
+</div>
+
+</body>
+</html>
